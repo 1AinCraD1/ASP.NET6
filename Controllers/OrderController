@@ -1,0 +1,73 @@
+using Microsoft.AspNetCore.Mvc;
+using YourProject.Models;
+using System.Collections.Generic;
+
+namespace YourProject.Controllers
+{
+    public class OrderController : Controller
+    {
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(User user)
+        {
+            if (user.Age < 16)
+            {
+                ModelState.AddModelError("", "Вам повинно бути більше 16 років для замовлення.");
+                return View();
+            }
+
+            return RedirectToAction("OrderQuantity", user);
+        }
+
+        [HttpGet]
+        public IActionResult OrderQuantity(User user)
+        {
+            ViewBag.User = user;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult OrderQuantity(int quantity, User user)
+        {
+            if (quantity <= 0)
+            {
+                ModelState.AddModelError("", "Кількість повинна бути більше нуля.");
+                ViewBag.User = user;
+                return View();
+            }
+
+            TempData["User"] = Newtonsoft.Json.JsonConvert.SerializeObject(user);
+            TempData["Quantity"] = quantity;
+            return RedirectToAction("OrderDetails");
+        }
+
+        [HttpGet]
+        public IActionResult OrderDetails()
+        {
+            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(TempData["User"].ToString());
+            int quantity = (int)TempData["Quantity"];
+
+            ViewBag.User = user;
+            ViewBag.Quantity = quantity;
+
+            var products = new List<Product>();
+            for (int i = 0; i < quantity; i++)
+            {
+                products.Add(new Product());
+            }
+
+            return View(products);
+        }
+
+        [HttpPost]
+        public IActionResult OrderDetails(List<Product> products)
+        {
+            return View("OrderSummary", products);
+        }
+    }
+}
