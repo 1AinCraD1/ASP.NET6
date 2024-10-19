@@ -1,0 +1,24 @@
+@model List<YourProject.Models.Product>
+@{
+    var user = ViewBag.User as YourProject.Models.User;
+
+    int quantity = (int)ViewBag.Quantity;
+}
+
+<h2>Введіть деталі для кожної піци:</h2>
+
+<form asp-action="OrderDetails" method="post">
+    @for (int i = 0; i < quantity; i++)
+
+    {
+        <div>
+            <label>Назва піци @i + 1:</label>
+            <input type="text" name="[@i].ProductName" required />
+        </div>
+        <div>
+            <label>Кількість:</label>
+            <input type="number" name="[@i].Quantity" required min="1" />
+        </div>
+    }
+    <button type="submit">Підтвердити замовлення</button>
+</form>
