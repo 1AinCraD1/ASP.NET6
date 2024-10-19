@@ -1,0 +1,21 @@
+@model YourProject.Models.User
+@{
+    var user = ViewBag.User as YourProject.Models.User;
+}
+
+<h2>Привіт, @user.Name! Скільки піц ви бажаєте замовити?</h2>
+
+<form asp-action="OrderQuantity" method="post">
+    <input type="hidden" name="Name" value="@user.Name" />
+    <input type="hidden" name="Age" value="@user.Age" />
+
+    <label for="quantity">Кількість товарів:</label>
+    <input type="number" name="quantity" required min="1" />
+
+    <button type="submit">Підтвердити</button>
+</form>
+@if (ViewData.ModelState.ErrorCount > 0)
+
+{
+    <p>@ViewData.ModelState[""].Errors[0].ErrorMessage</p>
+}
