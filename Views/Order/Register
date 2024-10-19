@@ -1,0 +1,18 @@
+@model YourProject.Models.User
+
+<form asp-action="Register" method="post">
+    <div>
+        <label for="Name">Ім'я:</label>
+        <input type="text" name="Name" required />
+    </div>
+    <div>
+        <label for="Age">Вік:</label>
+        <input type="number" name="Age" required />
+    </div>
+    <button type="submit">Зареєструватися</button>
+</form>
+@if (ViewData.ModelState.ErrorCount > 0)
+
+{
+    <p>@ViewData.ModelState[""].Errors[0].ErrorMessage</p>
+}
